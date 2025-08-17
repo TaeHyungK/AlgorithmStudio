@@ -1,0 +1,310 @@
+package com.txxbro.algorithm
+
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.txxbro.algorithm.ui.theme.AlgorithmTheme
+import kotlin.collections.forEach
+
+class MainActivity : ComponentActivity() {
+    private val TAG = "taehyung_test"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            AlgorithmTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val lazyListState = rememberLazyListState()
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize(),
+                        state = lazyListState
+                    ) {
+                        item {
+                            ResultText(
+                                text = "merge",
+                                onClick = {
+//                            val nums1 = arrayOf(1,2,3,0,0,0)
+//                            val m = 3
+//                            val nums2 = arrayOf(2,5,6)
+//                            val n = 3
+                                    val nums1 = arrayOf(1)
+                                    val m = 1
+                                    val nums2 = emptyArray<Int>()
+                                    val n = 0
+                                    merge(
+                                        nums1 = nums1.toIntArray(),
+                                        m = m,
+                                        nums2 = nums2.toIntArray(),
+                                        n = n
+                                    )
+                                }
+                            )
+                        }
+
+                        item {
+                            ResultText(
+                                text = "removeElement",
+                                onClick = {
+//                                    val nums = arrayOf(3,2,2,3)
+//                                    val value = 3
+//                                    val nums = arrayOf(0,1,2,2,3,0,4,2)
+//                                    val value = 2
+                                    val nums = emptyArray<Int>()
+                                    val value = 0
+                                    removeElement(
+                                        nums = nums.toIntArray(),
+                                        value = value
+                                    )
+                                }
+                            )
+                        }
+
+                        item {
+                            ResultText(
+                                text = "removeDuplicates",
+                                onClick = {
+                                    val nums = arrayOf(0,0,1,1,1,2,2,3,3,4)
+                                    removeDuplicates(
+                                        nums = nums.toIntArray()
+                                    )
+                                    removeDuplicatesBest(
+                                        nums = nums.toIntArray()
+                                    )
+                                }
+                            )
+                        }
+
+                        item {
+                            ResultText(
+                                text = "removeDuplicatesMedium",
+                                onClick = {
+                                    val nums = arrayOf(1,1,1,2,2,3)
+                                    removeDuplicatesMedium(
+                                        nums = nums.toIntArray()
+                                    )
+                                }
+                            )
+                        }
+
+                        item {
+                            ResultText(
+                                text = "majorityElement",
+                                onClick = {
+                                    val nums = arrayOf(2,2,1,1,1,2,2)
+                                    majorityElement(
+                                        nums = nums.toIntArray()
+                                    )
+                                    majorityElementFollowUp(
+                                        nums = nums.toIntArray()
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun merge(
+        nums1: IntArray,
+        m: Int,
+        nums2: IntArray,
+        n: Int
+    ) {
+        val result = IntArray(size = m + n)
+
+        var i = 0
+        var num1Pointer = 0
+        var num2Pointer = 0
+        while(i < result.size) {
+            val num1 = if (num1Pointer < m) {
+                nums1[num1Pointer]
+            } else {
+                Int.MAX_VALUE
+            }
+            val num2 = if (num2Pointer < n) {
+                nums2[num2Pointer]
+            } else {
+                Int.MAX_VALUE
+            }
+
+            if (num1 <= num2) {
+                result[i] = num1
+                num1Pointer++
+            } else {
+                result[i] = num2
+                num2Pointer++
+            }
+            i++
+        }
+
+        for (i in result.indices) {
+            nums1[i] = result[i]
+            Log.d(TAG, "merge: ${nums1[i]}")
+        }
+    }
+
+    private fun removeElement(nums: IntArray, value: Int): Int {
+        if (nums.isEmpty()) {
+            return 0
+        }
+
+        fun IntArray.findLastPosition(predicate: (Int) -> Boolean): Int? {
+            for (i in this.indices.reversed()) {
+                val element = this[i]
+                if (predicate(element)) {
+                    return i
+                }
+            }
+            return null
+        }
+        var start = 0
+        var end = nums.findLastPosition { it != value } ?: 0
+
+        while (start <= end) {
+            if (nums[start] == value) {
+                val temp = nums[start]
+                nums[start] = nums[end]
+                nums[end] = temp
+                start++
+                end = nums.findLastPosition { it != value } ?: (end - 1)
+            } else {
+                start++
+            }
+        }
+
+        var listText = ""
+        nums.forEach {
+            listText += "$it "
+        }
+        Log.d(TAG, "removeElement: listText: $listText | result: ${nums.findLastPosition { it != value } }}")
+
+        return nums.findLastPosition { it != value }?.plus(1) ?: 0
+    }
+
+    private fun removeDuplicates(nums: IntArray): Int {
+        val result = mutableListOf<Int>()
+        var index = 0
+        nums.forEach { num ->
+            if (!result.contains(num)) {
+                result.add(num)
+                nums[index] = num
+                index++
+            }
+        }
+
+        var listText = ""
+        nums.forEach {
+            listText += "$it "
+        }
+        Log.d(TAG, "removeDuplicates: listText: $listText | return: ${result.size}")
+
+        return result.size
+    }
+
+    private fun removeDuplicatesBest(nums: IntArray): Int {
+        var index = 1
+        for (i in 1..<nums.size) {
+            if (nums[i] != nums[i - 1]) {
+                nums[index] = nums[i]
+                index++
+            }
+        }
+
+        var listText = ""
+        nums.forEach {
+            listText += "$it "
+        }
+        Log.d(TAG, "removeDuplicatesBest: listText: $listText | return: $index")
+        return index
+    }
+
+    private fun removeDuplicatesMedium(nums: IntArray): Int {
+        if (nums.size <= 2) {
+            return nums.size
+        }
+
+        var p = 2
+        for (i in 2..<nums.size) {
+            if (nums[i] != nums[p - 2]) {
+                nums[p] = nums[i]
+                p++
+            }
+        }
+
+        var listText = ""
+        nums.forEach {
+            listText += "$it "
+        }
+        Log.d(TAG, "removeDuplicatesMedium: listText: $listText | return: $p")
+        return p
+    }
+
+    private fun majorityElement(nums: IntArray): Int {
+        val counterMap = mutableMapOf<Int, Int>()
+
+        nums.forEach { num ->
+            val current = counterMap[num]
+            counterMap[num] = current?.plus(1) ?: 1
+        }
+
+        var listText = ""
+        counterMap.forEach {
+            listText += "${it.key}: ${it.value} | "
+        }
+        Log.d(TAG, "majorityElement: listText: $listText | return: ${counterMap.maxBy { it.value }.key}")
+        return counterMap.maxBy { it.value }.key
+    }
+
+    private fun majorityElementFollowUp(nums: IntArray): Int {
+        var max = 0
+        var count = 0
+
+        nums.forEach { num ->
+            if (count == 0) {
+                max = num
+            }
+            if (max == num) {
+                count++
+            } else {
+                count--
+            }
+        }
+
+        Log.d(TAG, "majorityElementFollowUp: return: ${max}")
+        return max
+    }
+}
+
+@Composable
+fun ResultText(
+    text: String,
+    onClick: () -> Unit
+) {
+    Text(
+        text = text,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable {
+                onClick.invoke()
+            }
+    )
+}
