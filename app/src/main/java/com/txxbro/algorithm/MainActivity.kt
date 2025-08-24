@@ -116,6 +116,24 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        item {
+                            ResultText(
+                                text = "rotate",
+                                onClick = {
+                                    val nums = arrayOf(1,2,3,4,5,6,7)
+                                    val k = 3
+//                                    val nums = arrayOf(-1, -100, 3, 99)
+//                                    val k = 2
+//                                    val nums = arrayOf(1,7)
+//                                    val k = 7
+                                    rotate2(
+                                        nums = nums.toIntArray(),
+                                        k
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -290,6 +308,61 @@ class MainActivity : ComponentActivity() {
 
         Log.d(TAG, "majorityElementFollowUp: return: ${max}")
         return max
+    }
+
+    fun rotate(nums: IntArray, k: Int) {
+        if (nums.size <= 1) {
+            return
+        }
+
+        fun rightShift(nums: IntArray) {
+            val last = nums.last()
+            var captured = nums[0]
+
+            nums[0] = last
+            for (i in 1..nums.size - 1) {
+                val target = captured
+                captured = nums[i]
+                nums[i] = target
+            }
+        }
+
+        for (i in 0..k - 1) {
+            rightShift(nums)
+        }
+
+        var listText = ""
+        nums.forEach {
+            listText += "$it | "
+        }
+        Log.d(TAG, "rotate: result: $listText")
+    }
+
+    fun rotate2(nums: IntArray, k: Int) {
+        val size = nums.size
+        val steps = k % nums.size
+
+        fun reverse(start: Int, end: Int) {
+            var left = start
+            var right = end
+            while (left < right) {
+                var temp = nums[left]
+                nums[left] = nums[right]
+                nums[right] = temp
+                left++
+                right--
+            }
+        }
+
+        reverse(0, size - 1)
+        reverse(0, steps - 1)
+        reverse(steps, size - 1)
+
+        var listText = ""
+        nums.forEach {
+            listText += "$it | "
+        }
+        Log.d(TAG, "rotate: result: $listText")
     }
 }
 
