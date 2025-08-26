@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
 //                                    val k = 2
 //                                    val nums = arrayOf(1,7)
 //                                    val k = 7
-                                    rotate2(
+                                    rotateFast(
                                         nums = nums.toIntArray(),
                                         k
                                     )
@@ -310,7 +310,7 @@ class MainActivity : ComponentActivity() {
         return max
     }
 
-    fun rotate(nums: IntArray, k: Int) {
+    private fun rotate(nums: IntArray, k: Int) {
         if (nums.size <= 1) {
             return
         }
@@ -338,7 +338,7 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "rotate: result: $listText")
     }
 
-    fun rotate2(nums: IntArray, k: Int) {
+    private fun rotateFast(nums: IntArray, k: Int) {
         val size = nums.size
         val steps = k % nums.size
 
@@ -362,7 +362,7 @@ class MainActivity : ComponentActivity() {
         nums.forEach {
             listText += "$it | "
         }
-        Log.d(TAG, "rotate: result: $listText")
+        Log.d(TAG, "rotateFast: result: $listText")
     }
 }
 
