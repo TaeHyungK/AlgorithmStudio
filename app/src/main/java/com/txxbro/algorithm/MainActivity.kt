@@ -134,6 +134,20 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        item {
+                            ResultText(
+                                text = "maxProfit",
+                                onClick = {
+                                    val prices = arrayOf(7,1,5,3,6,4)
+//                                    val prices = arrayOf(7,6,4,3,1)
+//                                    val prices = arrayOf(2,4,1)
+                                    maxProfit(
+                                        prices = prices.toIntArray(),
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -363,6 +377,57 @@ class MainActivity : ComponentActivity() {
             listText += "$it | "
         }
         Log.d(TAG, "rotateFast: result: $listText")
+    }
+
+    private fun maxProfitFailure(prices: IntArray): Int {
+        // Time Limit Exceeded code !
+        if (prices.isEmpty()) {
+            return 0
+        }
+
+        var maxProfit = 0
+        for (i in prices.indices) {
+            val cur = prices[i]
+            var maxValueAfterCur = cur
+            for (j in i..prices.size - 1) {
+                val temp = prices[j]
+                if (maxValueAfterCur < temp) {
+                    maxValueAfterCur = temp
+                }
+            }
+
+            val tempGap = maxValueAfterCur - cur
+            if (maxProfit < tempGap) {
+                maxProfit = tempGap
+            }
+        }
+
+        Log.d(TAG, "maxProfit: result: $maxProfit")
+        return maxProfit
+    }
+
+    private fun maxProfit(prices: IntArray): Int {
+        if (prices.isEmpty()){
+            return 0
+        }
+
+        var buy = prices[0]
+        var maxProfit = 0
+
+        for (i in 1..prices.size - 1) {
+            val price = prices[i]
+            if (price < buy) {
+                buy = price
+            } else {
+                val gap = price - buy
+                if (maxProfit < gap) {
+                    maxProfit = gap
+                }
+            }
+        }
+
+        Log.d(TAG, "maxProfit: result: $maxProfit")
+        return maxProfit
     }
 }
 
