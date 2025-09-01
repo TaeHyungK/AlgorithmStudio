@@ -148,6 +148,21 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        item {
+                            ResultText(
+                                text = "maxProfit Medium",
+                                onClick = {
+//                                    val prices = arrayOf(7,1,5,3,6,4)
+//                                    val prices = arrayOf(7,6,4,3,1)
+//                                    val prices = arrayOf(2,4,1)
+                                    val prices = arrayOf(1,2,3,4,5)
+                                    maxProfitMedium(
+                                        prices = prices.toIntArray(),
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -428,6 +443,22 @@ class MainActivity : ComponentActivity() {
 
         Log.d(TAG, "maxProfit: result: $maxProfit")
         return maxProfit
+    }
+
+    fun maxProfitMedium(prices: IntArray): Int {
+        if (prices.isEmpty()) {
+            return 0
+        }
+
+        var sum = 0
+        for (i in 1..prices.size - 1) {
+            val prevPrice = prices[i - 1]
+            val prices = prices[i]
+
+            sum += maxOf(0, prices - prevPrice)
+        }
+        Log.d(TAG, "maxProfitMedium: result: $sum")
+        return sum
     }
 }
 
