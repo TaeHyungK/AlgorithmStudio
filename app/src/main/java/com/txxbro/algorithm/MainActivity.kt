@@ -163,6 +163,19 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        item {
+                            ResultText(
+                                text = "canJump",
+                                onClick = {
+//                                    val nums = arrayOf(2,3,1,1,4)
+                                    val nums = arrayOf(3,2,1,0,4)
+                                    canJump(
+                                        nums = nums.toIntArray(),
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -459,6 +472,19 @@ class MainActivity : ComponentActivity() {
         }
         Log.d(TAG, "maxProfitMedium: result: $sum")
         return sum
+    }
+
+    private fun canJump(nums: IntArray): Boolean {
+        var targetIndex = nums.lastIndex
+        for(i in nums.lastIndex - 1 downTo 0) {
+            val num = nums[i]
+            if (i + num >= targetIndex) {
+                targetIndex = i
+            }
+        }
+
+        Log.d(TAG, "canJump: result: ${targetIndex == 0}")
+        return targetIndex == 0
     }
 }
 
