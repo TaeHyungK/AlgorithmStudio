@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.txxbro.algorithm.ui.theme.AlgorithmTheme
 import kotlin.collections.forEach
+import kotlin.math.min
 
 class MainActivity : ComponentActivity() {
     private val TAG = "taehyung_test"
@@ -171,6 +172,19 @@ class MainActivity : ComponentActivity() {
 //                                    val nums = arrayOf(2,3,1,1,4)
                                     val nums = arrayOf(3,2,1,0,4)
                                     canJump(
+                                        nums = nums.toIntArray(),
+                                    )
+                                }
+                            )
+                        }
+
+                        item {
+                            ResultText(
+                                text = "jump",
+                                onClick = {
+                                    val nums = arrayOf(2,3,1,1,4)
+//                                    val nums = arrayOf(3,2,1,0,4)
+                                    jump(
                                         nums = nums.toIntArray(),
                                     )
                                 }
@@ -485,6 +499,29 @@ class MainActivity : ComponentActivity() {
 
         Log.d(TAG, "canJump: result: ${targetIndex == 0}")
         return targetIndex == 0
+    }
+
+    private fun jump(nums: IntArray): Int {
+        val jumpIndexes = nums.mapIndexed { index, value ->
+            index + value
+        }
+
+        var targetIndex = jumpIndexes.lastIndex
+        var result = 0
+        while (targetIndex > 0) {
+            val prev = (0 until targetIndex).firstOrNull {
+                jumpIndexes[it] >= targetIndex
+            } ?: return -1 // 도달 불가한 경우
+            targetIndex = prev
+            result++
+        }
+
+        var listText = ""
+        jumpIndexes.forEach {
+            listText += "$it "
+        }
+        Log.d(TAG, "jump: listText: $listText | result: $result")
+        return result
     }
 }
 
