@@ -190,6 +190,19 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        item {
+                            ResultText(
+                                text = "hIndex",
+                                onClick = {
+//                                    val citations = intArrayOf(3,0,6,1,5)
+                                    val citations = intArrayOf(1,3,1)
+                                    hIndex(
+                                        citations = citations
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -518,6 +531,30 @@ class MainActivity : ComponentActivity() {
 
         var listText = ""
         jumpIndexes.forEach {
+            listText += "$it "
+        }
+        Log.d(TAG, "jump: listText: $listText | result: $result")
+        return result
+    }
+
+    private fun hIndex(citations: IntArray): Int {
+        /**
+         * sort() 로 하고 if문을 citiations[i] <= ciations.size - i 로 해도 될 것 같아보이지만,
+         * 실제로는 같은 값이 있는 경우(1,3,1) -> 1,1,3 으로 두번째 1을 한번더 돌면서 result가 맞지 않는 케이스가 생긴다.
+         * 해서 내림차순으로 정리해서 중복된 값이 체크되지 않도록 해야 함
+         */
+        citations.sortDescending()
+        var result = 0
+        for (i in citations.indices) {
+            if (citations[i] >= i + 1) {
+                result++
+            } else {
+                break
+            }
+        }
+
+        var listText = ""
+        citations.forEach {
             listText += "$it "
         }
         Log.d(TAG, "jump: listText: $listText | result: $result")
